@@ -22,34 +22,15 @@ conda install -c conda-forge -c bioconda mmseqs2 spades
 
 ``` python
 # our sequence libraries
-!ls /Users/mtinti/git_projects/gene_finder/data/*
+!ls /Users/mtinti/git_projects/gene_finder/data/*q.gz
 ```
 
-    /Users/mtinti/git_projects/gene_finder/data/CLK1_CDS_Dm28c.fa
-    /Users/mtinti/git_projects/gene_finder/data/out.CLK1.tsv
     /Users/mtinti/git_projects/gene_finder/data/V350230622_L01_B5GANIdzjaRAAAA-1_R1.fastq.gz
     /Users/mtinti/git_projects/gene_finder/data/V350230622_L01_B5GANIdzjaRAAAA-1_R2.fastq.gz
     /Users/mtinti/git_projects/gene_finder/data/V350370689_L02_B5GANIokjbRAAAA-128_1.fq.gz
     /Users/mtinti/git_projects/gene_finder/data/V350370689_L02_B5GANIokjbRAAAA-128_2.fq.gz
     /Users/mtinti/git_projects/gene_finder/data/V350370689_L03_B5GANIokjbRAAAA-128_1.fq.gz
     /Users/mtinti/git_projects/gene_finder/data/V350370689_L03_B5GANIokjbRAAAA-128_2.fq.gz
-
-    /Users/mtinti/git_projects/gene_finder/data/output_Tc_Sylvio:
-    assembly_graph_after_simplification.gfa K77
-    assembly_graph_with_scaffolds.gfa       misc
-    assembly_graph.fastg                    params.txt
-    before_rr.fasta                         pipeline_state
-    contigs.fasta                           run_spades.sh
-    contigs.paths                           run_spades.yaml
-    corrected                               scaffolds.fasta
-    dataset.info                            scaffolds.paths
-    input_dataset.yaml                      spades.log
-    K21                                     tmp
-    K33                                     warnings.log
-    K55
-
-    /Users/mtinti/git_projects/gene_finder/data/tmp:
-    15721594744644573143 latest
 
 ### Running Spades
 
@@ -73,7 +54,7 @@ scaffolds
 
 ``` bash
 !mmseqs easy-search --search-type 3 \
---format-output  query,evalue,qstart,qend,qlen,target,tstart,tend \
+--format-output  query,evalue,qstart,qend,qlen,target,tstart,tend,tlen \
 ../data/CLK1_CDS_Dm28c.fa ../data/output_Tc_Sylvio/scaffolds.fasta \
 ../data/out.CLK1.tsv ../data/tmp
 ```
@@ -83,31 +64,80 @@ scaffolds
 !head ../data/out.CLK1.tsv
 ```
 
-    CLK1    0.000E+00   369 1458    1458    NODE_2457_length_1097_cov_126.120588    1   1090
-    CLK1    2.871E-225  1   445 1458    NODE_289_length_20803_cov_57.477757 20359   20803
-    CLK1    1.021E-38   445 354 1458    NODE_2388_length_1130_cov_56.830959 1   92
-    CLK1    1.716E-25   1389    1458    1458    NODE_1614_length_1713_cov_44.015892 1   70
-    CLK1    1.716E-25   1389    1458    1458    NODE_55_length_75916_cov_61.009375  1   70
+    CLK1    0.000E+00   369 1458    1458    NODE_2457_length_1097_cov_126.120588    1   1090    1097
+    CLK1    2.871E-225  1   445 1458    NODE_289_length_20803_cov_57.477757 20359   20803   20803
+    CLK1    1.021E-38   445 354 1458    NODE_2388_length_1130_cov_56.830959 1   92  1130
+    CLK1    1.716E-25   1389    1458    1458    NODE_1614_length_1713_cov_44.015892 1   70  1713
+    CLK1    1.716E-25   1389    1458    1458    NODE_55_length_75916_cov_61.009375  1   70  75916
 
 - The CLK1 sequence is split into two contigs
 
-Let’s retrive the sequences +/- 1000 bp
+NODE_2457 contains the second part of CLK1, NODE_289 contains the first
+part of CLK1. The two contigs do not permit to reconstruct the full
+sequence
+
+### We can conclude that short read assembly can not assemble the full sequence of CLK1
+
+let’s grab anyway the two sequences
 
 ``` python
 retrieve_and_save_sequence('../data/output_Tc_Sylvio/scaffolds.fasta',
                            'NODE_2457_length_1097_cov_126.120588',
-                           1,1090+1000,'../data/out_NODE_2457.fa')
+                           1,1090,'../data/out_NODE_2457.fa')
 ```
 
-    NameError: name 'retrieve_and_save_sequence' is not defined
-    [31m---------------------------------------------------------------------------[39m
-    [31mNameError[39m                                 Traceback (most recent call last)
-    [36mCell[39m[36m [39m[32mIn[6][39m[32m, line 1[39m
-    [32m----> [39m[32m1[39m [43mretrieve_and_save_sequence[49m([33m'[39m[33m../data/output_Tc_Sylvio/scaffolds.fasta[39m[33m'[39m,
-    [32m      2[39m                            [33m'[39m[33mNODE_2457_length_1097_cov_126.120588[39m[33m'[39m,
-    [32m      3[39m                            [32m1[39m,[32m1090[39m+[32m1000[39m,[33m'[39m[33m../data/out_NODE_2457.fa[39m[33m'[39m)
+    'Sequence saved to ../data/out_NODE_2457.fa'
 
-    [31mNameError[39m: name 'retrieve_and_save_sequence' is not defined
+``` python
+retrieve_and_save_sequence('../data/output_Tc_Sylvio/scaffolds.fasta',
+                           'NODE_289_length_20803_cov_57.477757',
+                           20359,20803,'../data/out_NODE_289.fa')
+```
+
+    'Sequence saved to ../data/out_NODE_289.fa'
+
+``` python
+import biotite.sequence as seq
+import biotite.sequence.io.fasta as fasta
+import biotite.sequence.align as align
+import biotite.sequence.graphics as graphics
+import matplotlib.pyplot as plt
+
+# Load sequences
+sequences = []
+labels = []
+files = [
+    '../data/TcCLK1_CM118357.1.fa',
+    '../data/out_NODE_289.fa',
+    '../data/out_NODE_2457.fa'
+]
+
+for file_path in files:
+    fasta_file = fasta.FastaFile.read(file_path)
+    for header, seq_string in fasta_file.items():
+        sequences.append(seq.NucleotideSequence(seq_string))
+        labels.append(header)
+
+# Perform multiple sequence alignment
+matrix = align.SubstitutionMatrix.std_nucleotide_matrix()
+alignment, order, _, _ = align.align_multiple(sequences, matrix, gap_penalty=(-15, -2))
+
+# Reorder to match your input order
+alignment = alignment[:, [0, 2, 1]]
+
+labels = ['TcCLK1','NODE_2457','NODE_289']
+# Visualize
+fig, ax = plt.subplots(figsize=(12, 40))
+graphics.plot_alignment_similarity_based(
+    ax, alignment, labels=labels, symbols_per_line=30,
+    show_numbers=True,
+    show_line_position=True,
+)
+plt.tight_layout()
+plt.show()
+```
+
+![](index_files/figure-commonmark/cell-6-output-1.png)
 
 ## Developer Guide
 
