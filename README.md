@@ -99,6 +99,12 @@ retrieve_and_save_sequence('../data/output_Tc_Sylvio/scaffolds.fasta',
 ### Let’s visualize the retived sequences along with the CLK1 sequence
 
 ``` python
+!cp ../data/out_NODE_289.fa .
+!cp ../data/out_NODE_2457.fa .
+!cp ../data/TcCLK1_CM118357.1.fa .
+```
+
+``` python
 import biotite.sequence as seq
 import biotite.sequence.io.fasta as fasta
 import biotite.sequence.align as align
@@ -109,9 +115,9 @@ import matplotlib.pyplot as plt
 sequences = []
 labels = []
 files = [
-    '../data/TcCLK1_CM118357.1.fa',
-    '../data/out_NODE_289.fa',
-    '../data/out_NODE_2457.fa'
+    'TcCLK1_CM118357.1.fa',
+    'out_NODE_289.fa',
+    'out_NODE_2457.fa'
 ]
 
 for file_path in files:
@@ -139,7 +145,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-![](index_files/figure-commonmark/cell-6-output-1.png)
+![](index_files/figure-commonmark/cell-7-output-1.png)
 
 ### Comments
 
