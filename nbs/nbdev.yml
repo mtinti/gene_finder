@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "gene_finder"
+  site-url: "https://mtinti.github.io/gene_finder"
+  description: "Utility to identify gene sequences from WGS data"
+  repo-branch: main
+  repo-url: "https://github.com/mtinti/gene_finder"
