@@ -96,6 +96,8 @@ retrieve_and_save_sequence('../data/output_Tc_Sylvio/scaffolds.fasta',
 
     'Sequence saved to ../data/out_NODE_289.fa'
 
+### Let’s visualize the retived sequences along with the CLK1 sequence
+
 ``` python
 import biotite.sequence as seq
 import biotite.sequence.io.fasta as fasta
@@ -138,6 +140,10 @@ plt.show()
 ```
 
 ![](index_files/figure-commonmark/cell-6-output-1.png)
+
+### Comments
+
+From our sequencing data it seems we have a synonymous mutation
 
 ## Developer Guide
 
