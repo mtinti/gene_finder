@@ -25,6 +25,8 @@ conda install -c conda-forge -c bioconda mmseqs2 spades
 !ls /Users/mtinti/git_projects/gene_finder/data/*
 ```
 
+    /Users/mtinti/git_projects/gene_finder/data/CLK1_CDS_Dm28c.fa
+    /Users/mtinti/git_projects/gene_finder/data/out.CLK1.tsv
     /Users/mtinti/git_projects/gene_finder/data/V350230622_L01_B5GANIdzjaRAAAA-1_R1.fastq.gz
     /Users/mtinti/git_projects/gene_finder/data/V350230622_L01_B5GANIdzjaRAAAA-1_R2.fastq.gz
     /Users/mtinti/git_projects/gene_finder/data/V350370689_L02_B5GANIokjbRAAAA-128_1.fq.gz
@@ -45,6 +47,9 @@ conda install -c conda-forge -c bioconda mmseqs2 spades
     K21                                     tmp
     K33                                     warnings.log
     K55
+
+    /Users/mtinti/git_projects/gene_finder/data/tmp:
+    15721594744644573143 latest
 
 ### Running Spades
 
@@ -89,17 +94,20 @@ scaffolds
 Let’s retrive the sequences +/- 1000 bp
 
 ``` python
-from 
 retrieve_and_save_sequence('../data/output_Tc_Sylvio/scaffolds.fasta',
                            'NODE_2457_length_1097_cov_126.120588',
                            1,1090+1000,'../data/out_NODE_2457.fa')
 ```
 
-    SyntaxError: invalid syntax (2504544915.py, line 1)
-      [36mCell[39m[36m [39m[32mIn[19][39m[32m, line 1[39m
-    [31m    [39m[31mfrom[39m
-             ^
-    [31mSyntaxError[39m[31m:[39m invalid syntax
+    NameError: name 'retrieve_and_save_sequence' is not defined
+    [31m---------------------------------------------------------------------------[39m
+    [31mNameError[39m                                 Traceback (most recent call last)
+    [36mCell[39m[36m [39m[32mIn[6][39m[32m, line 1[39m
+    [32m----> [39m[32m1[39m [43mretrieve_and_save_sequence[49m([33m'[39m[33m../data/output_Tc_Sylvio/scaffolds.fasta[39m[33m'[39m,
+    [32m      2[39m                            [33m'[39m[33mNODE_2457_length_1097_cov_126.120588[39m[33m'[39m,
+    [32m      3[39m                            [32m1[39m,[32m1090[39m+[32m1000[39m,[33m'[39m[33m../data/out_NODE_2457.fa[39m[33m'[39m)
+
+    [31mNameError[39m: name 'retrieve_and_save_sequence' is not defined
 
 ## Developer Guide
 

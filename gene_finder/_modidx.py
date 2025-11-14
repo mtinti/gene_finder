@@ -5,4 +5,5 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://mtinti.github.io',
                 'git_url': 'https://github.com/mtinti/gene_finder',
                 'lib_path': 'gene_finder'},
-  'syms': {'gene_finder.core': {'gene_finder.core.test_mmseq': ('core.html#test_mmseq', 'gene_finder/core.py')}}}
+  'syms': { 'gene_finder.core': { 'gene_finder.core.retrieve_and_save_sequence': ( 'core.html#retrieve_and_save_sequence',
+                                                                                   'gene_finder/core.py')}}}
